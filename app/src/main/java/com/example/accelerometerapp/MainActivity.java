@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.pytorch.IValue;
 import org.pytorch.Module;
@@ -23,8 +24,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
@@ -36,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager SM;
     private Sensor mySensor;
 
+    private DatabaseHelper myDB;
+    private Date timp;
+    private String timp_str;
 
     private TextView textView_rezultat;
 
@@ -43,7 +51,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        myDB = new DatabaseHelper(this);
 
+        timp = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        timp_str = dateFormat.format(timp);
 
         x = new ArrayList<Float>();
         y = new ArrayList<Float>();
@@ -64,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 open_new_activity();
             }
         });
-
     }
 
     @Override
@@ -109,15 +120,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
           //      Log.e( "Z ",String.valueOf(Math.abs(z.get(index_z)-_z)));
        }
 
-
-
-
-
       //  x.add(_x);
       //  y.add(_y);
       //  z.add(_z);
-
-
 
         prediction();
     }
@@ -198,10 +203,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             textView_rezultat = (TextView) findViewById(R.id.textView_rezultat);
             textView_rezultat.setText(clasa_detectata);
 
-        }
-    }
+            boolean isInserted =  myDB.insertData(clasa_detectata,timp_str);
 
-    //calculeaza media aritmetica pe fiecare linie
+            if (isInserted == true)
+                Toast.makeText(MainActivity.this,"Data inserted in DB!",Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(MainActivity.this,"Data NOT inserted in DB!",Toast.LENGTH_LONG).show();
+
+        }
+        }
+
+    //determina val maxima de pe fiecare linie
     public float max_function (List < Float > list) {
         float max = -10000;
         for (int i = 0; i < list.size(); i++) {
@@ -210,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
           }
         }
 
-        if(list.size() == 0){ return max;}
+        if(list.size() == 0){max =0; return max;}
         else
         {
             return max;
