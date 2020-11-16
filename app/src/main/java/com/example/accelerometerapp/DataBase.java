@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -57,7 +56,7 @@ public class DataBase extends AppCompatActivity  {
         entries.add(new BarEntry(nr_walking,2));
         entries.add(new BarEntry(nr_jogging,3));
 
-        BarDataSet barDataSet = new BarDataSet(entries,"Cells");
+        BarDataSet barDataSet = new BarDataSet(entries,"Activities");
 
         ArrayList<String> labels = new ArrayList<>();
         labels.add("sitting");
@@ -82,17 +81,20 @@ public class DataBase extends AppCompatActivity  {
                         Cursor res = myDB.getAllData();
                         if (res.getCount() == 0){
                             //show message
-                            showMessage("Error", "Nothing found");
+                            showMessage("Error", "No activity");
                             return;
                         }
                         StringBuffer buffer = new StringBuffer();
                         while (res.moveToNext()){
                             buffer.append("Id: "+res.getString(0)+"\n");
-                            buffer.append("Activitate: "+res.getString(1)+"\n");
-                            buffer.append("Timp: "+res.getString(2)+"\n");
+                            buffer.append("Activity: "+res.getString(1)+"\n");
+                            buffer.append("Date and hour: "+res.getString(2)+"\n");
+                            buffer.append("X: "+res.getString(3)+"\n");
+                            buffer.append("Y: "+res.getString(4)+"\n");
+                            buffer.append("Z: "+res.getString(5)+"\n");
                         }
 
-                        showMessage("Data",buffer.toString()); //show al data
+                        showMessage("Database",buffer.toString()); //show al data
                     }
                 }
         );

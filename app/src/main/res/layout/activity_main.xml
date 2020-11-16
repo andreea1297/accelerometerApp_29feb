@@ -5,22 +5,26 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#9FDBE2"
     tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Activitate determinata:"
+        android:layout_width="85dp"
+        android:layout_height="47dp"
+        android:background="#9FDBE2"
+        android:text="Activity"
+        android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.226"
+        app:layout_constraintHorizontal_bias="0.184"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.577" />
 
     <TextView
+        android:background="#9FDBE2"
         android:id="@+id/zText"
         android:layout_width="130dp"
         android:layout_height="42dp"
@@ -30,9 +34,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.426" />
+        app:layout_constraintVertical_bias="0.426"
+        android:textColor="#000000"/>
 
     <TextView
+        android:background="#9FDBE2"
         android:id="@+id/yText"
         android:layout_width="130dp"
         android:layout_height="42dp"
@@ -42,9 +48,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.338" />
+        app:layout_constraintVertical_bias="0.338"
+        android:textColor="#000000"/>
 
     <TextView
+        android:background="#9FDBE2"
         android:id="@+id/xText"
         android:layout_width="130dp"
         android:layout_height="42dp"
@@ -54,39 +62,45 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.259" />
+        app:layout_constraintVertical_bias="0.259"
+        android:textColor="#000000"/>
 
     <TextView
         android:id="@+id/textView_rezultat"
-        android:layout_width="80dp"
-        android:layout_height="24dp"
-        android:text="Hello World!"
+        android:layout_width="92dp"
+        android:layout_height="45dp"
+        android:background="#9FDBE2"
+        android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.182"
+        app:layout_constraintHorizontal_bias="0.188"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636" />
+        app:layout_constraintVertical_bias="0.644" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Coordonatele accelerometrului sunt:"
+        android:background="#9FDBE2"
+        android:text="Accelerometer's data:"
+        android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.252"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.168" />
+        app:layout_constraintVertical_bias="0.176" />
 
     <Button
         android:id="@+id/statistici"
         android:layout_width="157dp"
         android:layout_height="59dp"
-        android:text="Statistici"
+        android:background="@drawable/button_background"
+        android:text="Statistics"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.236"
         app:layout_constraintLeft_toLeftOf="parent"

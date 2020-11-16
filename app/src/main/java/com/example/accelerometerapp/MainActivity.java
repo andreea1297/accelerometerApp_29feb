@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         myDB = new DatabaseHelper(this);
 
         timp = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm:ss");
         timp_str = dateFormat.format(timp);
 
         x = new ArrayList<Float>();
@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             x.add(_x);
             y.add(_y);
             z.add(_z);
-
        // Log.e( "Z get.size()",String.valueOf(x.size()));
         }
         else {
@@ -110,27 +109,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             int index_y = y.size()-1;
             int index_z = z.size()-1;
 
-            if (Math.abs(x.get(index_x)-_x) >= 0.001 && Math.abs(y.get(index_y)-_y) >= 0.001 && Math.abs(z.get(index_z)-_y) >= 0.001){
+            if (Math.abs(x.get(index_x)-_x) >= 0.01 && Math.abs(y.get(index_y)-_y) >= 0.01 && Math.abs(z.get(index_z)-_y) >= 0.01){
                 x.add(_x);
                 y.add(_y);
                 z.add(_z);}
 
            // Log.e( "X ",String.valueOf(Math.abs(x.get(index_x)-_x)));
          //   Log.e( "Y ",String.valueOf(Math.abs(y.get(index_y)-_y)));
-          //      Log.e( "Z ",String.valueOf(Math.abs(z.get(index_z)-_z)));
+          //  Log.e( "Z ",String.valueOf(Math.abs(z.get(index_z)-_z)));
        }
-
-      //  x.add(_x);
-      //  y.add(_y);
-      //  z.add(_z);
 
         prediction();
     }
 
-
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
     }
     protected void onPause(){
         super.onPause();
@@ -145,19 +138,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //fac predictiile
     private void prediction() {
 
-
         ArrayList<Float> data_all = new ArrayList<>();
 
         if (x.size() == nr && y.size() == nr && z.size() == nr) {
 
-            float maxX = max_function(x);
-            float maxY = max_function(y);
-            float maxZ = max_function(z);
+            float minX = media_function(x);
+            float minY = media_function(y);
+            float minZ = media_function(z);
 
             //creez o lista cu 3 elemente
-            data_all.add(max_function(x));
-            data_all.add(max_function(y));
-            data_all.add(max_function(z));
+            data_all.add(media_function(x));
+            data_all.add(media_function(y));
+            data_all.add(media_function(z));
 
             x.clear();
             y.clear();
@@ -171,22 +163,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         this,
                         "model_v7_2.pt"));
 
-
             } catch (IOException e) {
-                Log.e("PytorchError", "Error reading assets", e);
+                Log.e("PytorchError", "Nu s-a putut citi fisierul cu extensia .pt", e);
                 finish();
             }
 
-            Tensor input = Tensor.fromBlob(new float[]{maxX,maxY,maxZ},new long[]{1,3});
+            Tensor input = Tensor.fromBlob(new float[]{minX,minY,minZ},new long[]{1,3});
             IValue output = network.forward(IValue.from(input));
-            float[] scores = output.toTensor().getDataAsFloatArray();
-
-            //calling the forward method of the model to run our input
-            //network.forward(IValue.listFrom(mediaX,mediaY,mediaZ));
-//            final float[] rezultat = output.getDataAsFloatArray();
+            float[] scores = output.toTensor().getDataAsFloatArray(); //iesirea din retea -> tensor cu 4 elemente
 
             //indexul cu valoarea cea mai mare
-            float max_score = -Float.MAX_VALUE;
+           // float max_score = -Float.MAX_VALUE;
+            double max_score = 0.39;
+
             int ms_ix = -1;
             for (int i = 0; i < scores.length; i++) {
 
@@ -203,29 +192,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             textView_rezultat = (TextView) findViewById(R.id.textView_rezultat);
             textView_rezultat.setText(clasa_detectata);
 
-            boolean isInserted =  myDB.insertData(clasa_detectata,timp_str);
+            boolean isInserted =  myDB.insertData(clasa_detectata,timp_str, minX, minY, minZ);//scriere in baza de date
 
-            if (isInserted == true)
-                Toast.makeText(MainActivity.this,"Data inserted in DB!",Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(MainActivity.this,"Data NOT inserted in DB!",Toast.LENGTH_LONG).show();
-
+          //  if (isInserted == true)
+            //    Toast.makeText(MainActivity.this,"Data introdusa in baza de date",Toast.LENGTH_LONG).show();
+          //  else
+            //    Toast.makeText(MainActivity.this,"Data NU a fost introdusa in baza de date!",Toast.LENGTH_LONG).show();
         }
         }
 
-    //determina val maxima de pe fiecare linie
-    public float max_function (List < Float > list) {
-        float max = -10000;
+    //determina val medie de pe fiecare linie
+    public float media_function (List < Float > list) {
+        float suma = 0;
+        float media;
         for (int i = 0; i < list.size(); i++) {
-          if (list.get(i) > max){
-              max = list.get(i);
+            suma = list.get(i)+suma;
           }
-        }
-
-        if(list.size() == 0){max =0; return max;}
+         media = suma/list.size();
+        if(suma == 0){ return 0;}
         else
         {
-            return max;
+            return media;
         }
     }
 
